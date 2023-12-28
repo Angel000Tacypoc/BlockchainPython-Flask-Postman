@@ -4,7 +4,7 @@ Esta blockchain esta creada con python.
 
 ```Para ver el funcionamiento del codigo se necesita Flask y Postman para correr los nodos y las peticiones http.```
 
-## Blockchain en Python
+## Raw Script
 
 ```bash
 import datetime
