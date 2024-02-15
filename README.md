@@ -2,7 +2,7 @@
 
 Esta blockchain esta creada con python. 
 
-```Para ver el funcionamiento del codigo se necesita Flask y Postman para correr los nodos y las peticiones http.```
+```Para ver el funcionamiento del codigo puedes utilizar Postman para correr los nodos y las peticiones http.```
 
 ## Raw Script
 
