@@ -1,110 +1,86 @@
-# Blockchain Con Python 
+# Blockchain Descentralizada con PYTHON
 
-Esta blockchain esta creada con python. 
+Este proyecto presenta una implementación simple de una blockchain descentralizada en Python utilizando la biblioteca Flask. La estructura del proyecto se divide en varios archivos, cada uno con su funcionalidad específica.
 
-```Para ver el funcionamiento del codigo puedes utilizar Postman para correr los nodos y las peticiones http.```
+### Archivos Principales
 
-## Raw Script
+1. **Block1.py:** Contiene la implementación de la blockchain. Aquí se definen los bloques, la prueba de trabajo (proof of work) y las funciones relacionadas con la cadena de bloques.
 
-```bash
-import datetime
-import hashlib 
-import json 
-from flask import Flask, jsonify
+2. **cripto.py:** Este archivo representa la implementación básica de una criptomoneda. Define cómo se crean y gestionan las transacciones, y cómo se lleva el registro de las monedas de los usuarios.
 
-#Armado de la blockchain
+3. **cript_nodo_5001.py:** Primer nodo de la red. Este archivo establece un nodo que puede minar bloques y conectarse con otros nodos para descentralizar la red.
 
-class Blockchain: 
-    def __init__(self): 
-        self.chain = [] 
-        self.create_block(proof=1,previous_hash='0')
-        
-    def create_block(self, proof, previous_hash): 
-        block = {'index':len(self.chain)+1,
-                 'timestamp': str(datetime.datetime.now()),
-                 'proof':proof,
-                 'previous_hash':previous_hash}
-        
-        self.chain.append(block) 
-        return block 
+4. **cript_nodo_5002.py:** Segundo nodo de la red.
 
-    def get_previous_block(self):
-        return self.chain[-1]
-    
-    def proof_of_work (self, previous_proof): 
-        new_proof = 1
-        check_proof = False 
-        
-        while check_proof is False: 
-            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
-            
-            if hash_operation [:4] == '0000':
-                check_proof = True 
-            else: 
-                new_proof += 1
-                
-        return new_proof 
+5. **cript_nodo_5003.py:** Tercer nodo de la red.
 
-    def hash(self, block):
-        encoded_block = json.dumps(block, sort_keys = True).encode()
-        return hashlib.sha256(encoded_block).hexdigest()
-    
-#Verificacion de la validez de la cadena al examinar cada bloque individualmente.
-    def is_chain_valid(self, chain): 
-        previous_block = chain[0]
-        block_index = 1
-        while block_index < len(chain): 
-            block = chain [block_index]
-            if block['previous_hash'] != self.hash(previous_block):
-                return False
-            
-            previous_proof = previous_block['proof']
-            proof = block['proof']
-            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest() 
-            if hash_operation[:4] != '0000':
-                return False 
-            
-            previous_block = block
-            block_index += 1
-        return True
-            
-#Minado
+## Conexión entre Nodos
 
-app = Flask(__name__)
-blockchain = Blockchain()      
+Cada nodo se comunica con otros mediante el uso de archivos JSON. Se ha implementado un mecanismo simple para que los nodos se conecten entre sí y formen una red descentralizada.
 
-#Nuevo Bloque
-@app.route('/mine_block', methods=['GET'])
+## Configuración en Postman
 
-def mine_block ():
-    previous_block = blockchain.get_previous_block()
-    previous_proof = previous_block['proof']
-    proof = blockchain.proof_of_work(previous_proof)
-    previous_hash = blockchain.hash(previous_block)
-    block = blockchain.create_block(proof,previous_hash)
-    response = {'message':'Tic Tic! Congrats Buzz you have mined the block',
-                'index':block['index'], 
-                'timestamp':block['timestamp'],
-                'proof': block['proof'],
-                'previous_hash': block['previous_hash']}
-    return jsonify(response), 200
+Para conectar los nodos, se utiliza Postman. En cada pestaña para los nodos 5001, 5002 y 5003, se debe realizar la siguiente configuración:
 
+1. Ir a la sección "Body".
+2. Seleccionar la opción "raw".
+3. Cambiar el tipo de texto a "JSON".
+4. Copiar y pegar el contenido del archivo `nodes.json` para cada nodo.
 
-#Obteniendo la cadena completa
-@app.route('/get_chain', methods=['GET'])
-def get_chain():
-    response = {'chain': blockchain.chain, 
-                'length': len(blockchain.chain)}
-    return jsonify (response), 200
-    
-#Chequeando la validez del bloque
-@app.route('/is_valid', methods=['GET'])
-def is_valid():
-    is_valid = blockchain.is_chain_valid(blockchain.chain)
-    if is_valid: 
-        response = {'message': 'Todo bien.. Blockchain valido.'}
-    else:
-        response = {'message': 'Tenemos un problema.. El Blockchain NO es valido.'}
-    return jsonify (response), 200
+Ejemplos:
 
+- Para el Nodo 5001:
+
+```json
+{
+    "nodes": ["http://127.0.0.1:5002", "http://127.0.0.1:5003"]
+}
 ```
+
+- Para el Nodo 5002:
+
+```json
+{
+    "nodes": ["http://127.0.0.1:5001", "http://127.0.0.1:5003"]
+}
+```
+
+- Para el Nodo 5003:
+
+```json
+{
+    "nodes": ["http://127.0.0.1:5002", "http://127.0.0.1:5001"]
+}
+```
+
+## Conexión y Minería
+
+Una vez que los nodos están en ejecución, se pueden realizar peticiones POST para conectar los nodos y comenzar a minar la blockchain. Ejemplos:
+
+- Para conectar el Nodo 5001:
+
+```http
+POST http://127.0.0.1:5001/connect_node
+```
+
+- Para conectar el Nodo 5002:
+
+```http
+POST http://127.0.0.1:5002/connect_node
+```
+
+- Para conectar el Nodo 5003:
+
+```http
+POST http://127.0.0.1:5003/connect_node
+```
+
+Luego, se pueden realizar peticiones de minería para agregar bloques a la blockchain:
+
+```http
+GET http://127.0.0.1:5001/mine_block
+GET http://127.0.0.1:5002/mine_block
+GET http://127.0.0.1:5003/mine_block
+```
+
+¡Con esto, los nodos se conectan, minan bloques y forman una red descentralizada de blockchain!
