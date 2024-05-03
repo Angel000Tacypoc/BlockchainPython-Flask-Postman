@@ -83,4 +83,4 @@ GET http://127.0.0.1:5002/mine_block
 GET http://127.0.0.1:5003/mine_block
 ```
 
-¡Con esto, los nodos se conectan, minan bloques y forman una red descentralizada de blockchain!
+Con esto, los nodos se conectan, minan bloques y forman una red descentralizada de blockchain
