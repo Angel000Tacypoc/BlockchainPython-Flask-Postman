@@ -20,7 +20,8 @@ Cada nodo se comunica con otros mediante el uso de archivos JSON. Se ha implemen
 
 ## Configuración en Postman
 
-Para conectar los nodos, se podría utilizar Postman. En cada pestaña para los nodos 5001, 5002 y 5003, se debe realizar la siguiente configuración:
+En mi caso utilicé Postman para el desarrollo de las API's. 
+En cada pestaña para los nodos 5001, 5002 y 5003, se debe realizar la siguiente configuración:
 
 1. Ir a la sección "Body".
 2. Seleccionar la opción "raw".
